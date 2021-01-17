@@ -4,6 +4,10 @@ import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
+export type MetaType = {
+  title: string;
+};
+
 const routes: Array<RouteConfig> = [
   {
     path: "/",
@@ -18,6 +22,14 @@ const routes: Array<RouteConfig> = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
+  },
+  {
+    path: "/sudoku",
+    name: "Sudoku",
+    component: () => import("@/views/Sudoku.vue"),
+    meta: {
+      title: "数独（通常）"
+    }
   }
 ];
 
