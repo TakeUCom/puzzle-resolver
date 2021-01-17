@@ -17,7 +17,7 @@
             </v-btn>
           </div>
           <div class="btn-row">
-            <v-btn width="100%" :color="solveColor">
+            <v-btn @click="solve" width="100%" :color="solveColor">
               解く
             </v-btn>
           </div>
@@ -30,6 +30,7 @@
 import { Vue, Component, Prop } from "vue-property-decorator";
 import Question from "@/components/sudoku/Question.vue";
 import { CellType } from "@/components/sudoku/Cell.vue";
+import SolveLogic from "@/logic/sudoku/SolveLogic";
 
 export enum Status {
   RESET = 1,
@@ -74,6 +75,37 @@ export default class Sudoku extends Vue {
       this.question.push(row);
     }
     this.status = Status.RESET;
+  }
+
+  solve() {
+    const question = this.convertQuestionToArray();
+    const ans = SolveLogic.solve(question);
+    this.reflectAnswer(ans);
+  }
+
+  private convertQuestionToArray(): Array<Array<number>> {
+    const arrayQuestion = [];
+    for (const row of this.question) {
+      const rowQuestion = [];
+      for (const cell of row) {
+        rowQuestion.push(
+          cell.value !== null && cell.value > 0 ? cell.value : 0
+        );
+      }
+      arrayQuestion.push(rowQuestion);
+    }
+
+    return arrayQuestion;
+  }
+
+  private reflectAnswer(ans: Array<Array<number>>): void {
+    for (let i = 0; i < 9; i++) {
+      for (let j = 0; j < 9; j++) {
+        if (ans[i][j] > 0) {
+          this.question[i][j].value = ans[i][j];
+        }
+      }
+    }
   }
 
   get resetColor(): string {
